@@ -1,10 +1,10 @@
-// /app/api/task/delete/[taskId]/route.ts
+
 
 import { NextRequest, NextResponse } from "next/server";
-import Task from "@/models/task"; // Adjust the path as necessary
-import User from "@/models/user"; // Import the User model
-import Connection from "@/database/config"; // Adjust the path as necessary
-import jwt from "jsonwebtoken"; // Ensure you have this library
+import Task from "@/models/task"; 
+import User from "@/models/user";
+import Connection from "@/database/config"; 
+import jwt from "jsonwebtoken";
 
 Connection();
 
@@ -28,7 +28,6 @@ export const DELETE = async (
 
     const user = jwt.verify(token, "mysecretkey");
     userId = user.id;
-    console.log(userId);
   } catch (error) {
     return NextResponse.json({ message: "Invalid token" }, { status: 401 });
   }
@@ -59,7 +58,7 @@ export const DELETE = async (
   } catch (error) {
     console.error("Error deleting task:", error);
     return NextResponse.json(
-      { message: "Server error", error: error.message },
+      { message: "Server error" },
       { status: 500 }
     );
   }

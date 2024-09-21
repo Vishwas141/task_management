@@ -1,4 +1,4 @@
-import Editform from "./editform";
+import Editform from "./Editform";
 
 export default function TaskManagerPage() {
   return (
