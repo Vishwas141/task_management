@@ -1,20 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -25,106 +25,102 @@ import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 
 interface FormData {
-    title: string;
-    status: "To Do" | "In Progress" | "Completed";
-    priority: "Low" | "Medium" | "High";
-    dueDate?: Date;
-    description: string;
+  title: string;
+  status: "To Do" | "In Progress" | "Completed";
+  priority: "Low" | "Medium" | "High";
+  dueDate?: Date;
+  description: string;
 }
 
-export default function TaskEditForm() {
-    const [formData, setFormData] = useState<FormData>({
-        title: "",
-        status: "To Do",
-        priority: "Medium",
-        description: "",
-    });
+const TaskEditForm = () => {
+  const [formData, setFormData] = useState<FormData>({
+    title: "",
+    status: "To Do",
+    priority: "Medium",
+    description: "",
+  });
 
-    const [errors, setErrors] = useState<Partial<FormData>>({});
-    const [calendarOpen, setCalendarOpen] = useState(false);
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const taskId = searchParams.get("taskId");
+  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const taskId = searchParams.get("taskId");
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleDateChange = (date: Date | null) => {
+    setFormData({ ...formData, dueDate: date || undefined });
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: Partial<FormData> = {};
+    if (formData.title.trim().length < 2) {
+      newErrors.title = "Title must be at least 2 characters.";
+      toast.error("Title must be at least 2 characters.");
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateForm()) {
+      try {
+        await axios.put(
+          `/api/task/update/${taskId}`,
+          {
+            title: formData.title,
+            description: formData.description,
+            dueDate: formData.dueDate,
+            status: formData.status,
+            priority: formData.priority,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        router.push("/dashboard");
+      } catch (error) {
+        toast.error("Failed to update task");
+        console.error(error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const fetchTaskData = async () => {
+      try {
+        const response = await axios.get(`/api/task/get`, {
+          params: { id: taskId },
+        });
+        setFormData({
+          title: response.data[0].title,
+          description: response.data[0].description,
+          dueDate: response.data.dueDate
+            ? new Date(response.data.dueDate)
+            : undefined,
+          status: response.data.status,
+          priority: response.data.priority,
+        });
+      } catch (error) {
+        console.error("Failed to fetch task data", error);
+        toast.error("Failed to fetch task data");
+      }
     };
 
-    const handleSelectChange = (name: string, value: string) => {
-        setFormData({ ...formData, [name]: value });
-    };
+    if (taskId) {
+      fetchTaskData();
+    }
+  }, [taskId]);
 
-    const handleDateChange = (date: Date | null) => {
-        setFormData({ ...formData, dueDate: date || undefined });
-    };
-
-    const validateForm = (): boolean => {
-        const newErrors: Partial<FormData> = {};
-        if (formData.title.trim().length < 2) {
-            newErrors.title = "Title must be at least 2 characters.";
-            toast.error("Title must be at least 2 characters.");
-
-        }
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (validateForm()) {
-            try {
-               await axios.put(
-                    `/api/task/update/${taskId}`,
-                    {
-                        title: formData.title,
-                        description: formData.description,
-                        dueDate: formData.dueDate,
-                        status: formData.status,
-                        priority: formData.priority,
-                    },
-                    {
-                        withCredentials: true,
-                    }
-                );
-                router.push("/dashboard");
-            } catch (error) {
-                toast.error("Failed to update task");
-                console.error(error);
-            }
-        }
-    };
-
-    useEffect(() => {
-        const fetchTaskData = async () => {
-            try {
-                
-                const response = await axios.get(`/api/task/get`, {
-                    params: { id: taskId },
-                });
-                
-                setFormData({
-                    title: response.data[0].title,
-                    description: response.data[0].description,
-                    dueDate: response.data.dueDate
-                        ? new Date(response.data.dueDate)
-                        : undefined,
-                    status: response.data.status,
-                    priority: response.data.priority,
-                });
-
-
-            } catch (error) {
-                console.error("Failed to fetch task data", error);
-                toast.error("Failed to fetch task data");
-            }
-        };
-
-        if (taskId) {
-            fetchTaskData();
-        }
-    }, [taskId]);
-
-    return (
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
       <form
         onSubmit={handleSubmit}
         className="space-y-6 w-full mt-5 sm:w-[550px] sm:h-[70vh] sm:mt-2"
@@ -263,5 +259,8 @@ export default function TaskEditForm() {
           Update Task
         </Button>
       </form>
-    );
-}
+    </Suspense>
+  );
+};
+
+export default TaskEditForm;
