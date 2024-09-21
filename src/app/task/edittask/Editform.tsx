@@ -73,7 +73,7 @@ export default function TaskEditForm() {
         e.preventDefault();
         if (validateForm()) {
             try {
-                const response = await axios.put(
+               await axios.put(
                     `/api/task/update/${taskId}`,
                     {
                         title: formData.title,

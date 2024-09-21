@@ -3,11 +3,11 @@ import Connection from "@/database/config";
 
 Connection();
 
-export const POST = async (req: NextRequest) => {
+export const POST = async () => {
   try {
-    const res = NextResponse.next();
 
     
+    const res = NextResponse.next();
 
     res.cookies.set("token", "", {
       maxAge: -1,

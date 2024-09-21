@@ -29,7 +29,7 @@ export const DELETE = async (
     const user = jwt.verify(token, process.env.JWT_SECRET as string);
     userId = user.id;
   } catch (error) {
-    return NextResponse.json({ message: "Invalid token" }, { status: 401 });
+    return NextResponse.json({ message: "Invalid token" ,error}, { status: 401 });
   }
 
   try {

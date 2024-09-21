@@ -43,10 +43,7 @@ export default function SignUp() {
         password: userDetails.password,
       });
 
-      const data = res.data;
-
-
-
+  
       setUserDetails({
         username: "",
         email: "",
@@ -54,11 +51,11 @@ export default function SignUp() {
         confirmPassword: "",
       });
 
-      router.push("/login"); 
-
-    } catch (error: any) {
-      setError(error.response?.data?.message || "Something went wrong");
-      toast.error(error.response?.data?.message || "Something went wrong");
+      router.push("/login");
+    } catch (err) {
+      setError("Something went wrong");
+      toast.error("Something went wrong");
+      console.error(err);
     } finally {
       setLoading(false);
     }

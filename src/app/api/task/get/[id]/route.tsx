@@ -32,6 +32,6 @@ export const GET = async (req: NextRequest) => {
             priority: task.priority,
     }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ message: "Server error" }, { status: 500 });
+    return NextResponse.json({ message: "Server error",error }, { status: 500 });
   }
 };
