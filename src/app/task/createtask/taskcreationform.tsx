@@ -116,6 +116,7 @@ export default function TaskCreationForm() {
         <Input
           id="title"
           name="title"
+          type="text"
           value={formData.title}
           onChange={handleInputChange}
           placeholder="Enter task title"
@@ -134,6 +135,7 @@ export default function TaskCreationForm() {
         </label>
         <Input
           id="description"
+          type="text"
           name="description"
           value={formData.description}
           onChange={handleInputChange}
@@ -219,9 +221,9 @@ export default function TaskCreationForm() {
           {calendarOpen && (
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
-                onChange={handleDateChange}
+                onChange={(value) => value && handleDateChange(value as Date)}
                 value={formData?.dueDate || new Date()}
-                minDate={new Date()} // Disable past dates
+                minDate={new Date()}
               />
             </PopoverContent>
           )}

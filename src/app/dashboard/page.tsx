@@ -148,6 +148,7 @@ export default function TaskManager() {
       <div className="flex flex-col md:flex-row justify-between mb-4 space-y-2 md:space-y-0 md:space-x-2">
         <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-2 flex-grow">
           <Input
+            type="text"
             placeholder="Filter tasks..."
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
