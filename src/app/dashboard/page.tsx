@@ -104,7 +104,7 @@ export default function TaskManager() {
   const handleDelete = async(taskId: string) => {
     try
     {
-      const response = await axios.delete(`/api/task/delete/${taskId}`, { withCredentials: true });
+      await axios.delete(`/api/task/delete/${taskId}`, { withCredentials: true });
       window.location.reload();
     } catch (error) {
       toast.error("Failed to delete task");
@@ -143,7 +143,7 @@ export default function TaskManager() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Welcome back!</h1>
       <p className="text-gray-600 mb-4">
-        Here's a list of your tasks for this month!
+        A list of your tasks 
       </p>
       <div className="flex flex-col md:flex-row justify-between mb-4 space-y-2 md:space-y-0 md:space-x-2">
         <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-2 flex-grow">

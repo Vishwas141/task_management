@@ -71,7 +71,7 @@ export default function TaskCreationForm() {
     if (validateForm()) {
       try
       {
-           const response = await axios.post(
+            await axios.post(
              "/api/task/create", 
              {
                title: formData.title,

@@ -24,9 +24,9 @@ export const DELETE = async (
 
   let userId;
   try {
-    console.log(token);
+   
 
-    const user = jwt.verify(token, "mysecretkey");
+    const user = jwt.verify(token, process.env.JWT_SECRET as string);
     userId = user.id;
   } catch (error) {
     return NextResponse.json({ message: "Invalid token" }, { status: 401 });
@@ -34,7 +34,7 @@ export const DELETE = async (
 
   try {
     const task = await Task.findById(taskId);
-    console.log(task);
+   
 
     if (!task) {
       return NextResponse.json({ message: "Task not found" }, { status: 404 });

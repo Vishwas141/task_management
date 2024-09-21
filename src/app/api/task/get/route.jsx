@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import {  NextResponse } from "next/server";
 import Task from "@/models/task";
 import Connection from "@/database/config";
 import jwt from "jsonwebtoken";
@@ -12,7 +12,7 @@ export const GET = async (req) => {
       return NextResponse.json({ message: "Unauthorized token not found" }, { status: 401 });
     }
  
-    const user = jwt.verify(token, "mysecretkey");
+    const user = jwt.verify(token, process.env.JWT_SECRET);
    
 
       const userId = user.id;

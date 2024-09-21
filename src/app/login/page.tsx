@@ -20,16 +20,17 @@ export default function SignIn() {
     setLoading(true);
   
     try {
-      const res = await axios.post("api/auth/login", {
+      await axios.post("api/auth/login", {
         email,
         password,
       });
 
       router.push("/dashboard");
+    } catch (err) {
+      setError( "Something went wrong");
+      toast.error("Something went wrong");
+      console.error(err);
       
-    } catch (error: any) {
-      setError(error.response?.data?.message || "Something went wrong");
-      toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }

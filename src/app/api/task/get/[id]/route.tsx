@@ -22,7 +22,7 @@ export const GET = async (req: NextRequest) => {
     if (!task) {
       return NextResponse.json({ message: "Task not found" }, { status: 404 });
     }
-      console.log(task.title);
+    
       
       return NextResponse.json({
           title: task.title,

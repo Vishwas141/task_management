@@ -64,7 +64,7 @@ export default function KanbanBoard() {
     setTasks(updatedTasks);
 
     try {
-      let taskId = draggableId;
+      const taskId = draggableId;
       await axios.put(`/api/task/updateStatus/${taskId}`, {
         status: newStatus,
       });
@@ -72,6 +72,7 @@ export default function KanbanBoard() {
   
     } catch (error) {
       toast.error("Error updating task status");
+      console.error("Error updating task status:", error);
       setTasks(tasks);
     }
   };
