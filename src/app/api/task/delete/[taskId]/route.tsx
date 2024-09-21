@@ -26,8 +26,8 @@ export const DELETE = async (
   try {
    
 
-    const user = jwt.verify(token, process.env.JWT_SECRET as string);
-    userId = user.id;
+    const user = jwt.verify(token, process.env.JWT_SECRET as string) as jwt.JwtPayload;
+     userId = user.id as string;
   } catch (error) {
     return NextResponse.json({ message: "Invalid token" ,error}, { status: 401 });
   }
