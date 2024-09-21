@@ -4,7 +4,8 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import Link from "next/link"; // Import Link for navigation
+import Link from "next/link"; 
+import toast from "react-hot-toast";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -17,24 +18,18 @@ export default function SignIn() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    console.log(email, password);
-
+  
     try {
       const res = await axios.post("api/auth/login", {
         email,
         password,
       });
 
-      const data = res.data;
+      router.push("/dashboard");
       
-   
-        router.push("/");
-
-    
-
     } catch (error: any) {
       setError(error.response?.data?.message || "Something went wrong");
-
+      toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }

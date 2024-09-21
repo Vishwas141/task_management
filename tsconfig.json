@@ -21,6 +21,16 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/lib/mongodb.jsx", "src/lib/jwt.jsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/lib/mongodb.jsx",
+    "src/lib/jwt.jsx",
+    "src/app/api/task/create/route.jsx",
+    "src/app/task/createtask/taskcreationform.tsx",
+    "src/app/api/auth/login/route.jsx"
+, "src/app/api/task/get/route.jsx", "src/app/api/task/update/[taskId]/route.tsx", "src/app/api/task/delete/[taskId]/route.tsx", "src/middleware.jsx"  ],
   "exclude": ["node_modules"]
 }

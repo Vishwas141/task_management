@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken"
 
 Connection();
 
-export const POST = async (req: NextRequest) => {
+export const POST = async (req) => {
     try {
         const body = await req.json();
         const { email, password } = body;
@@ -54,8 +54,7 @@ export const POST = async (req: NextRequest) => {
 
         res.cookies.set("token", token, {
             httpOnly: true,
-            maxAge: 60 * 60,
-            path: "/",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
         return res;

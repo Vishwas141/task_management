@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link"; // Import Link for navigation
+import toast from "react-hot-toast";
 
 export default function SignUp() {
   const [userDetails, setUserDetails] = useState({
@@ -31,6 +32,7 @@ export default function SignUp() {
 
     if (userDetails.password !== userDetails.confirmPassword) {
       setLoading(false); 
+      toast.error("Passwords do not match");
       return setError("Passwords do not match");
     }
 
@@ -53,10 +55,12 @@ export default function SignUp() {
       });
 
       router.push("/login"); 
+
     } catch (error: any) {
       setError(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 
