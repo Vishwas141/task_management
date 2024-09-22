@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import axios from "axios";
 
@@ -27,5 +27,5 @@ export default function Home() {
     verifyUser();
   }, [router]);
 
-  return null;
+  return redirect("/dashboard");
 }

@@ -15,7 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CalendarIcon, ListIcon } from "lucide-react";
+import { CalendarIcon, ListIcon, Pencil, Trash } from "lucide-react";
 
 interface Task {
   _id: string;
@@ -34,14 +34,13 @@ export default function TaskDetail() {
   const params = useParams();
   const router = useRouter();
   const taskId = params.taskId as string;
-  
+
   useEffect(() => {
     const fetchTask = async () => {
       try {
         const response = await axios.get(`/api/task/get`, {
           params: { id: taskId },
         });
-
         setTask(response.data[0]);
       } catch (error) {
         toast.error("Failed to fetch task details");
@@ -126,7 +125,9 @@ export default function TaskDetail() {
             <p>The requested task could not be found.</p>
           </CardContent>
           <CardFooter>
-            <Button onClick={() => router.push("/dashboard")}>Back to Task List</Button>
+            <Button onClick={() => router.push("/dashboard")}>
+              Back to Task List
+            </Button>
           </CardFooter>
         </Card>
       </div>
@@ -135,14 +136,13 @@ export default function TaskDetail() {
 
   return (
     <div className="container mx-auto p-4">
-      <Card>
-        <CardHeader>
-          <div className="flex justify-between items-start">
-            <div>
-              <CardTitle className="text-2xl mb-2">{task?.title}</CardTitle>
-              <CardDescription>Task ID: {task?._id}</CardDescription>
-            </div>
-            <div className="flex space-x-2">
+      <Card className="max-w-3xl mx-auto">
+        <CardHeader className="space-y-2">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+            <CardTitle className="text-xl sm:text-2xl mb-2 sm:mb-0">
+              {task?.title}
+            </CardTitle>
+            <div className="flex flex-wrap gap-2">
               <Badge className={getStatusColor(task?.status)}>
                 {task?.status}
               </Badge>
@@ -151,32 +151,44 @@ export default function TaskDetail() {
               </Badge>
             </div>
           </div>
+          <CardDescription className="text-sm">
+            Task ID: {task?._id}
+          </CardDescription>
         </CardHeader>
-        <CardContent>
-          <p className="mb-4">{task?.description}</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-center">
-              <CalendarIcon className="mr-2" />
-              <span>
-                Due Date:{" "}
-                {task?.dueDate
-                  ? new Date(task?.dueDate).toLocaleDateString()
-                  : "Not set"}
-              </span>
-            </div>
-           
+        <CardContent className="space-y-4">
+          <p className="text-sm sm:text-base">{task?.description}</p>
+          <div className="flex items-center text-sm sm:text-base">
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            <span>
+              Due Date:{" "}
+              {task?.dueDate
+                ? new Date(task?.dueDate).toLocaleDateString()
+                : "Not set"}
+            </span>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={() => router.push("/dashboard")}>
+        <CardFooter className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
+          <Button
+            variant="outline"
+            onClick={() => router.push("/dashboard")}
+            className="w-full sm:w-auto"
+          >
             <ListIcon className="mr-2 h-4 w-4" /> Back to Task List
           </Button>
-          <div className="space-x-2">
-            <Button variant="secondary" onClick={handleEdit}>
-              Edit Task
+          <div className="flex space-x-2 w-full sm:w-auto">
+            <Button
+              variant="secondary"
+              onClick={handleEdit}
+              className="flex-1 sm:flex-none"
+            >
+              <Pencil className="mr-2 h-4 w-4" /> Edit
             </Button>
-            <Button variant="destructive" onClick={handleDelete}>
-              Delete Task
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              className="flex-1 sm:flex-none"
+            >
+              <Trash className="mr-2 h-4 w-4" /> Delete
             </Button>
           </div>
         </CardFooter>

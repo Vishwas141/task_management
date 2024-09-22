@@ -32,6 +32,13 @@ const Navbar = () => {
   return (
     <nav className="flex items-center justify-between p-4 bg-gray-600 text-white shadow-md">
       <div className="text-xl font-bold">Task Manager</div>
+
+      <div className="hidden md:flex space-x-4">
+        <Link href="/dashboard">Dashboard</Link>
+        <Link href="/board">Board</Link>
+      </div>
+
+      
       <div className="relative">
         <button
           onClick={() => setDropdownOpen((prev) => !prev)}

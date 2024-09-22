@@ -1,4 +1,5 @@
 "use client";
+
 import * as React from "react";
 import {
   Table,
@@ -10,7 +11,6 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,7 +32,6 @@ interface Task {
   dueDate?: Date;
 }
 
-
 export default function TaskManager() {
   const [filter, setFilter] = React.useState("");
   const [tasks, setTasks] = React.useState<Task[]>([]);
@@ -53,21 +52,16 @@ export default function TaskManager() {
     High: false,
   });
 
-  // Filter tasks based on the search filter, status filters, and priority filters
-
   const filteredTasks = tasks.filter(
     (task) =>
-      // Check if the task title or ID includes the search filter (case-insensitive)
       (task.title.toLowerCase().includes(filter.toLowerCase()) ||
         task._id.toLowerCase().includes(filter.toLowerCase())) &&
-      // Check if no status filters are active or if the task's status matches an active filter
       (Object.values(statusFilters).every((v) => v === false) ||
         statusFilters[task.status]) &&
       (Object.values(priorityFilters).every((v) => v === false) ||
         priorityFilters[task.priority])
   );
 
-  // Toggle the status filter for a given status
   const handleStatusFilterChange = (status: string) => {
     setStatusFilters((prev) => ({ ...prev, [status]: !prev[status] }));
   };
@@ -114,7 +108,7 @@ export default function TaskManager() {
       try {
         const response = await axios.get("/api/task/get", {
           withCredentials: true,
-        }); 
+        });
         setTasks(response.data);
       } catch (error) {
         toast.error("Failed to fetch tasks");
@@ -139,18 +133,18 @@ export default function TaskManager() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Welcome back!</h1>
       <p className="text-gray-600 mb-4">A list of your tasks</p>
-      <div className="flex flex-col md:flex-row justify-between mb-4 space-y-2 md:space-y-0 md:space-x-2">
-        <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-2 flex-grow">
-          <Input
-            type="text"
-            placeholder="Filter tasks..."
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="w-full md:w-64"
-          />
+      <div className="flex flex-col space-y-2 mb-4">
+        <Input
+          type="text"
+          placeholder="Filter tasks..."
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="w-full"
+        />
+        <div className="flex flex-wrap gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-full md:w-auto">
+              <Button variant="outline" className="w-full sm:w-auto">
                 Status
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
@@ -179,7 +173,7 @@ export default function TaskManager() {
           </DropdownMenu>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-full md:w-auto">
+              <Button variant="outline" className="w-full sm:w-auto">
                 Priority
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
@@ -207,19 +201,32 @@ export default function TaskManager() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div>
-          <Button onClick={() => handlecreateTask()}>Create Task</Button>
+        <div className="flex justify-end">
+          <Button
+            onClick={() => handlecreateTask()}
+            className="w-full sm:w-2/12"
+          >
+            Create Task
+          </Button>
         </div>
       </div>
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Task ID</TableHead>
+              <TableHead className="w-[100px] hidden sm:table-cell">
+                Task ID
+              </TableHead>
               <TableHead>Task</TableHead>
-              <TableHead className="w-[100px]">Status</TableHead>
-              <TableHead className="w-[100px]">Priority</TableHead>
-              <TableHead className="w-[120px]">Due Date</TableHead>
+              <TableHead className="w-[100px] hidden sm:table-cell">
+                Status
+              </TableHead>
+              <TableHead className="w-[100px] hidden sm:table-cell">
+                Priority
+              </TableHead>
+              <TableHead className="w-[120px] hidden sm:table-cell">
+                Due Date
+              </TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
@@ -229,11 +236,22 @@ export default function TaskManager() {
                 key={task._id}
                 onClick={() => router.push(`/task/${task?._id}`)}
               >
-                <TableCell className="font-medium">{task?._id}</TableCell>
-                <TableCell>{task?.title}</TableCell>
-                <TableCell>{task?.status}</TableCell>
-                <TableCell>{task?.priority}</TableCell>
+                <TableCell className="font-medium hidden sm:table-cell">
+                  {task?._id}
+                </TableCell>
                 <TableCell>
+                  <div className="flex items-center justify-between">
+                    <span className="truncate mr-2">{task?.title}</span>
+                    <span className="sm:hidden">...</span>
+                  </div>
+                </TableCell>
+                <TableCell className="hidden sm:table-cell">
+                  {task?.status}
+                </TableCell>
+                <TableCell className="hidden sm:table-cell">
+                  {task?.priority}
+                </TableCell>
+                <TableCell className="hidden sm:table-cell">
                   {task?.dueDate
                     ? new Date(task?.dueDate).toLocaleDateString()
                     : "N/A"}
