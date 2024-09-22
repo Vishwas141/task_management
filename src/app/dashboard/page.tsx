@@ -232,14 +232,14 @@ export default function TaskManager() {
           </TableHeader>
           <TableBody>
             {filteredTasks.map((task) => (
-              <TableRow
-                key={task._id}
-                onClick={() => router.push(`/task/${task?._id}`)}
-              >
-                <TableCell className="font-medium hidden sm:table-cell">
+              <TableRow key={task._id}>
+                <TableCell
+                  className="font-medium hidden sm:table-cell"
+                  onClick={() => router.push(`/task/${task?._id}`)}
+                >
                   {task?._id}
                 </TableCell>
-                <TableCell>
+                <TableCell onClick={() => router.push(`/task/${task?._id}`)}>
                   <div className="flex items-center justify-between">
                     <span className="truncate mr-2">{task?.title}</span>
                     <span className="sm:hidden">...</span>
