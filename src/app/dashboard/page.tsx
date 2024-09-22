@@ -10,13 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,8 +35,8 @@ interface Task {
 
 export default function TaskManager() {
   const [filter, setFilter] = React.useState("");
-   const [tasks, setTasks] = React.useState<Task[]>([]);
-    const router = useRouter();
+  const [tasks, setTasks] = React.useState<Task[]>([]);
+  const router = useRouter();
 
   const [statusFilters, setStatusFilters] = React.useState<
     Record<string, boolean>
@@ -59,17 +53,21 @@ export default function TaskManager() {
     High: false,
   });
 
+  // Filter tasks based on the search filter, status filters, and priority filters
 
   const filteredTasks = tasks.filter(
     (task) =>
+      // Check if the task title or ID includes the search filter (case-insensitive)
       (task.title.toLowerCase().includes(filter.toLowerCase()) ||
         task._id.toLowerCase().includes(filter.toLowerCase())) &&
+      // Check if no status filters are active or if the task's status matches an active filter
       (Object.values(statusFilters).every((v) => v === false) ||
         statusFilters[task.status]) &&
       (Object.values(priorityFilters).every((v) => v === false) ||
         priorityFilters[task.priority])
   );
 
+  // Toggle the status filter for a given status
   const handleStatusFilterChange = (status: string) => {
     setStatusFilters((prev) => ({ ...prev, [status]: !prev[status] }));
   };
@@ -89,22 +87,21 @@ export default function TaskManager() {
       Medium: false,
       High: false,
     });
-    };
-    
-    const handlecreateTask = () => {
-       router.push("/task/createtask");
-    };
-
-
-  const handleEdit = (taskId: string) => {
-    
-     router.push(`/task/edittask?taskId=${taskId}`);
   };
 
-  const handleDelete = async(taskId: string) => {
-    try
-    {
-      await axios.delete(`/api/task/delete/${taskId}`, { withCredentials: true });
+  const handlecreateTask = () => {
+    router.push("/task/createtask");
+  };
+
+  const handleEdit = (taskId: string) => {
+    router.push(`/task/edittask?taskId=${taskId}`);
+  };
+
+  const handleDelete = async (taskId: string) => {
+    try {
+      await axios.delete(`/api/task/delete/${taskId}`, {
+        withCredentials: true,
+      });
       window.location.reload();
     } catch (error) {
       toast.error("Failed to delete task");
@@ -112,22 +109,21 @@ export default function TaskManager() {
     }
   };
 
-   React.useEffect(() => {
-     const fetchTasks = async () => {
-       try {
-         const response = await axios.get("/api/task/get",{withCredentials:true}); // Fetch tasks
-         setTasks(response.data); 
+  React.useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get("/api/task/get", {
+          withCredentials: true,
+        }); 
+        setTasks(response.data);
+      } catch (error) {
+        toast.error("Failed to fetch tasks");
+        console.error("Failed to fetch tasks", error);
+      }
+    };
 
-       } catch (error) {
-         toast.error("Failed to fetch tasks");
-         console.error("Failed to fetch tasks", error);
-       }
-     };
-
-     fetchTasks();
-   }, []);
-
-
+    fetchTasks();
+  }, []);
 
   const statusCounts = tasks.reduce((acc, task) => {
     acc[task.status] = (acc[task.status] || 0) + 1;
@@ -142,9 +138,7 @@ export default function TaskManager() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Welcome back!</h1>
-      <p className="text-gray-600 mb-4">
-        A list of your tasks 
-      </p>
+      <p className="text-gray-600 mb-4">A list of your tasks</p>
       <div className="flex flex-col md:flex-row justify-between mb-4 space-y-2 md:space-y-0 md:space-x-2">
         <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-2 flex-grow">
           <Input
@@ -216,16 +210,6 @@ export default function TaskManager() {
         <div>
           <Button onClick={() => handlecreateTask()}>Create Task</Button>
         </div>
-        <Select defaultValue="10">
-          <SelectTrigger className="w-full md:w-[180px]">
-            <SelectValue placeholder="Rows per page" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="10">10 per page</SelectItem>
-            <SelectItem value="20">20 per page</SelectItem>
-            <SelectItem value="50">50 per page</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
       <div className="overflow-x-auto">
         <Table>
@@ -241,7 +225,10 @@ export default function TaskManager() {
           </TableHeader>
           <TableBody>
             {filteredTasks.map((task) => (
-              <TableRow key={task._id}>
+              <TableRow
+                key={task._id}
+                onClick={() => router.push(`/task/${task._id}`)}
+              >
                 <TableCell className="font-medium">{task._id}</TableCell>
                 <TableCell>{task.title}</TableCell>
                 <TableCell>{task.status}</TableCell>

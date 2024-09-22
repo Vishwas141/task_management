@@ -11,7 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface Task {
   _id: string;
@@ -29,10 +30,10 @@ const columns: { id: Task["status"]; title: string }[] = [
 
 export default function KanbanBoard() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     fetchTasks();
-
   }, []);
 
   const fetchTasks = async () => {
@@ -58,22 +59,34 @@ export default function KanbanBoard() {
     }
 
     const newStatus = destination.droppableId as Task["status"];
-    const updatedTasks = tasks.map((task) =>
-      task._id === draggableId ? { ...task, status: newStatus } : task
+    const updatedTasks = Array.from(tasks);
+    const taskIndex = updatedTasks.findIndex(
+      (task) => task._id === draggableId
     );
-    setTasks(updatedTasks);
+    const [movedTask] = updatedTasks.splice(taskIndex, 1);
+    movedTask.status = newStatus;
+
+    const destinationTasks = updatedTasks.filter(
+      (task) => task.status === newStatus
+    );
+    destinationTasks.splice(destination.index, 0, movedTask);
+
+    const finalTasks = [
+      ...updatedTasks.filter((task) => task.status !== newStatus),
+      ...destinationTasks,
+    ];
+
+    setTasks(finalTasks);
 
     try {
-      const taskId = draggableId;
-      await axios.put(`/api/task/updateStatus/${taskId}`, {
+      await axios.put(`/api/task/updateStatus/${draggableId}`, {
         status: newStatus,
       });
-      toast.success(`Task ${draggableId} moved to ${newStatus}`);
-  
+      toast.success(`Task moved to ${newStatus}`);
     } catch (error) {
       toast.error("Error updating task status");
       console.error("Error updating task status:", error);
-      setTasks(tasks);
+      fetchTasks(); // Revert to the original state by refetching tasks
     }
   };
 
@@ -95,43 +108,43 @@ export default function KanbanBoard() {
       <h1 className="text-2xl font-bold mb-4">Kanban Board</h1>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {columns.map((column) => {
-            const columnTasks = tasks.filter(
-              (task) => task.status === column.id
-            );
-            const columnHeight = `${Math.max(400, columnTasks.length * 100)}px`;
-
-            return (
-              <div
-                key={column.id}
-                className="bg-gray-100 p-4 rounded-lg flex flex-col"
-              >
-                <h2 className="text-lg font-semibold mb-2">{column.title}</h2>
-                <Droppable droppableId={column.id}>
-                  {(provided) => (
-                    <ScrollArea
-                      className={`flex-grow overflow-y-auto`}
-                      style={{ height: columnHeight }}
+          {columns.map((column) => (
+            <div
+              key={column.id}
+              className="bg-gray-100 p-4 rounded-lg flex flex-col"
+            >
+              <h2 className="text-lg font-semibold mb-2">{column.title}</h2>
+              <Droppable droppableId={column.id}>
+                {(provided, snapshot) => (
+                  <ScrollArea
+                    className={`flex-grow overflow-y-auto ${
+                      snapshot.isDraggingOver ? "bg-gray-200" : ""
+                    }`}
+                    style={{ height: "400px" }}
+                  >
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      className="space-y-2 min-h-full"
                     >
-                      <div
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        className="space-y-2 min-h-full"
-                      >
-                        {columnTasks.map((task, index) => (
+                      {tasks
+                        .filter((task) => task.status === column.id)
+                        .map((task, index) => (
                           <Draggable
                             key={task._id}
                             draggableId={task._id}
                             index={index}
                           >
-                            {(provided) => (
+                            {(provided, snapshot) => (
                               <div
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
-                                className="mb-2"
+                                className={`mb-2 ${
+                                  snapshot.isDragging ? "opacity-50" : ""
+                                }`}
                               >
-                                <Card>
+                                <Card onClick={()=>router.push(`/task/${task._id}`)}>
                                   <CardHeader>
                                     <CardTitle className="text-sm font-medium">
                                       {task.title}
@@ -154,14 +167,13 @@ export default function KanbanBoard() {
                             )}
                           </Draggable>
                         ))}
-                        {provided.placeholder}
-                      </div>
-                    </ScrollArea>
-                  )}
-                </Droppable>
-              </div>
-            );
-          })}
+                      {provided.placeholder}
+                    </div>
+                  </ScrollArea>
+                )}
+              </Droppable>
+            </div>
+          ))}
         </div>
       </DragDropContext>
     </div>

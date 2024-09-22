@@ -103,7 +103,7 @@ const TaskEditForm = () => {
           title: response.data[0].title,
           description: response.data[0].description,
           dueDate: response.data.dueDate
-            ? new Date(response.data.dueDate)
+            ? new Date(response.data[0].dueDate)
             : undefined,
           status: response.data.status,
           priority: response.data.priority,

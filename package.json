@@ -28,6 +28,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "font-awesome": "^4.7.0",
+    "jose": "^5.9.2",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.441.0",
     "mongoose": "^8.6.3",

@@ -8,8 +8,8 @@ export const GET = async (req: NextRequest) => {
   try {
    
     const { searchParams } = new URL(req.url);
-      const taskId = searchParams.get("id"); 
-  
+    const taskId = searchParams.get("id");
+    
     if (!taskId) {
       return NextResponse.json(
         { message: "Task ID is required" },
@@ -23,7 +23,7 @@ export const GET = async (req: NextRequest) => {
       return NextResponse.json({ message: "Task not found" }, { status: 404 });
     }
     
-      
+  
       return NextResponse.json({
           title: task.title,
           description: task.description,
