@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import {
   DragDropContext,
@@ -116,60 +115,58 @@ export default function KanbanBoard() {
               <h2 className="text-lg font-semibold mb-2">{column.title}</h2>
               <Droppable droppableId={column.id}>
                 {(provided, snapshot) => (
-                  <ScrollArea
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
                     className={`flex-grow overflow-y-auto ${
                       snapshot.isDraggingOver ? "bg-gray-200" : ""
                     }`}
-                    style={{ height: "400px" }}
+                    style={{ minHeight: "400px" }} // Ensure minimum height
                   >
-                    <div
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}
-                      className="space-y-2 min-h-full"
-                    >
-                      {tasks
-                        .filter((task) => task.status === column.id)
-                        .map((task, index) => (
-                          <Draggable
-                            key={task._id}
-                            draggableId={task._id}
-                            index={index}
-                          >
-                            {(provided, snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                className={`mb-2 ${
-                                  snapshot.isDragging ? "opacity-50" : ""
-                                }`}
+                    {tasks
+                      .filter((task) => task.status === column.id)
+                      .map((task, index) => (
+                        <Draggable
+                          key={task._id}
+                          draggableId={task._id}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className={`mb-2 ${
+                                snapshot.isDragging ? "opacity-50" : ""
+                              }`}
+                            >
+                              <Card
+                                onClick={() => router.push(`/task/${task._id}`)}
                               >
-                                <Card onClick={()=>router.push(`/task/${task._id}`)}>
-                                  <CardHeader>
-                                    <CardTitle className="text-sm font-medium">
-                                      {task.title}
-                                    </CardTitle>
-                                  </CardHeader>
-                                  <CardContent>
-                                    <p className="text-xs text-gray-600 mb-2">
-                                      {task.description}
-                                    </p>
-                                    <Badge
-                                      className={`${getPriorityColor(
-                                        task.priority
-                                      )}`}
-                                    >
-                                      {task.priority}
-                                    </Badge>
-                                  </CardContent>
-                                </Card>
-                              </div>
-                            )}
-                          </Draggable>
-                        ))}
-                      {provided.placeholder}
-                    </div>
-                  </ScrollArea>
+                                <CardHeader>
+                                  <CardTitle className="text-sm font-medium">
+                                    {task.title}
+                                  </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                  <p className="text-xs text-gray-600 mb-2">
+                                    {task.description}
+                                  </p>
+                                  <Badge
+                                    className={`${getPriorityColor(
+                                      task.priority
+                                    )}`}
+                                  >
+                                    {task.priority}
+                                  </Badge>
+                                </CardContent>
+                              </Card>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                    {provided.placeholder}
+                  </div>
                 )}
               </Droppable>
             </div>
