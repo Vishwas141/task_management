@@ -126,12 +126,12 @@ export default function TaskManager() {
   }, []);
 
   const statusCounts = tasks.reduce((acc, task) => {
-    acc[task.status] = (acc[task.status] || 0) + 1;
+    acc[task?.status] = (acc[task?.status] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
 
   const priorityCounts = tasks.reduce((acc, task) => {
-    acc[task.priority] = (acc[task.priority] || 0) + 1;
+    acc[task?.priority] = (acc[task?.priority] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
 
@@ -227,15 +227,15 @@ export default function TaskManager() {
             {filteredTasks.map((task) => (
               <TableRow
                 key={task._id}
-                onClick={() => router.push(`/task/${task._id}`)}
+                onClick={() => router.push(`/task/${task?._id}`)}
               >
-                <TableCell className="font-medium">{task._id}</TableCell>
-                <TableCell>{task.title}</TableCell>
-                <TableCell>{task.status}</TableCell>
-                <TableCell>{task.priority}</TableCell>
+                <TableCell className="font-medium">{task?._id}</TableCell>
+                <TableCell>{task?.title}</TableCell>
+                <TableCell>{task?.status}</TableCell>
+                <TableCell>{task?.priority}</TableCell>
                 <TableCell>
-                  {task.dueDate
-                    ? new Date(task.dueDate).toLocaleDateString()
+                  {task?.dueDate
+                    ? new Date(task?.dueDate).toLocaleDateString()
                     : "N/A"}
                 </TableCell>
                 <TableCell>
@@ -246,11 +246,11 @@ export default function TaskManager() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => handleEdit(task._id)}>
+                      <DropdownMenuItem onClick={() => handleEdit(task?._id)}>
                         <Pencil className="mr-2 h-4 w-4" />
                         <span>Edit</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleDelete(task._id)}>
+                      <DropdownMenuItem onClick={() => handleDelete(task?._id)}>
                         <Trash className="mr-2 h-4 w-4" />
                         <span>Delete</span>
                       </DropdownMenuItem>

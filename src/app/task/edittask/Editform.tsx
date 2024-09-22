@@ -176,7 +176,7 @@ const TaskEditForm = () => {
             </label>
             <Select
               onValueChange={(value) => handleSelectChange("status", value)}
-              value={formData.status}
+              value={formData?.status}
             >
               <SelectTrigger id="status" className="mt-1">
                 <SelectValue placeholder="Select a status" />
@@ -232,11 +232,11 @@ const TaskEditForm = () => {
                 onClick={() => setCalendarOpen(!calendarOpen)}
                 className={cn(
                   "w-full mt-1 justify-start text-left font-normal",
-                  !formData.dueDate && "text-muted-foreground"
+                  !formData?.dueDate && "text-muted-foreground"
                 )}
               >
-                {formData.dueDate ? (
-                  format(formData.dueDate, "PPP")
+                {formData?.dueDate ? (
+                  format(formData?.dueDate, "PPP")
                 ) : (
                   <span>Pick a date</span>
                 )}
@@ -247,7 +247,7 @@ const TaskEditForm = () => {
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   onChange={(value) => handleDateChange(value as Date | null)}
-                  value={formData.dueDate || new Date()}
+                  value={formData?.dueDate || new Date()}
                   minDate={new Date()} // Disable past dates
                 />
               </PopoverContent>

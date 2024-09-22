@@ -15,7 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CalendarIcon, ClockIcon, ListIcon } from "lucide-react";
+import { CalendarIcon, ListIcon } from "lucide-react";
 
 interface Task {
   _id: string;
@@ -139,28 +139,28 @@ export default function TaskDetail() {
         <CardHeader>
           <div className="flex justify-between items-start">
             <div>
-              <CardTitle className="text-2xl mb-2">{task.title}</CardTitle>
-              <CardDescription>Task ID: {task._id}</CardDescription>
+              <CardTitle className="text-2xl mb-2">{task?.title}</CardTitle>
+              <CardDescription>Task ID: {task?._id}</CardDescription>
             </div>
             <div className="flex space-x-2">
-              <Badge className={getStatusColor(task.status)}>
-                {task.status}
+              <Badge className={getStatusColor(task?.status)}>
+                {task?.status}
               </Badge>
-              <Badge className={getPriorityColor(task.priority)}>
-                {task.priority}
+              <Badge className={getPriorityColor(task?.priority)}>
+                {task?.priority}
               </Badge>
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <p className="mb-4">{task.description}</p>
+          <p className="mb-4">{task?.description}</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-center">
               <CalendarIcon className="mr-2" />
               <span>
                 Due Date:{" "}
-                {task.dueDate
-                  ? new Date(task.dueDate).toLocaleDateString()
+                {task?.dueDate
+                  ? new Date(task?.dueDate).toLocaleDateString()
                   : "Not set"}
               </span>
             </div>

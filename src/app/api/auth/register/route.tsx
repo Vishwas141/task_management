@@ -8,7 +8,7 @@ Connection();
 export const POST = async (req: NextRequest) => {
     try {
         const body = await req.json();
-        
+
 
         const { username, email, password } = body;
 
@@ -27,19 +27,19 @@ export const POST = async (req: NextRequest) => {
                 { status: 400 }
             );
         }
-        
-        const hashedPassword=await bcryptjs.hash(password, 10);
-        
+
+        const hashedPassword = await bcryptjs.hash(password, 10);
+
 
         const newUser = new User({
             username,
             email,
-            password:hashedPassword,
+            password: hashedPassword,
         });
 
         await newUser.save();
-        
-        return NextResponse.json({ message: "User registered successfully" },{status:200});
+
+        return NextResponse.json({ message: "User registered successfully" }, { status: 200 });
 
     } catch (error) {
         console.error(error);

@@ -7,7 +7,7 @@ import {
   DropResult,
 } from "@hello-pangea/dnd";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -60,7 +60,7 @@ export default function KanbanBoard() {
     const newStatus = destination.droppableId as Task["status"];
     const updatedTasks = Array.from(tasks);
     const taskIndex = updatedTasks.findIndex(
-      (task) => task._id === draggableId
+      (task) => task?._id === draggableId
     );
     const [movedTask] = updatedTasks.splice(taskIndex, 1);
     movedTask.status = newStatus;
@@ -85,7 +85,7 @@ export default function KanbanBoard() {
     } catch (error) {
       toast.error("Error updating task status");
       console.error("Error updating task status:", error);
-      fetchTasks(); // Revert to the original state by refetching tasks
+      fetchTasks(); 
     }
   };
 
@@ -124,11 +124,11 @@ export default function KanbanBoard() {
                     style={{ minHeight: "400px" }} // Ensure minimum height
                   >
                     {tasks
-                      .filter((task) => task.status === column.id)
+                      .filter((task) => task?.status === column.id)
                       .map((task, index) => (
                         <Draggable
-                          key={task._id}
-                          draggableId={task._id}
+                          key={task?._id}
+                          draggableId={task?._id}
                           index={index}
                         >
                           {(provided, snapshot) => (
@@ -141,23 +141,23 @@ export default function KanbanBoard() {
                               }`}
                             >
                               <Card
-                                onClick={() => router.push(`/task/${task._id}`)}
+                                onClick={() => router.push(`/task/${task?._id}`)}
                               >
                                 <CardHeader>
                                   <CardTitle className="text-sm font-medium">
-                                    {task.title}
+                                    {task?.title}
                                   </CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                   <p className="text-xs text-gray-600 mb-2">
-                                    {task.description}
+                                    {task?.description}
                                   </p>
                                   <Badge
                                     className={`${getPriorityColor(
-                                      task.priority
+                                      task?.priority
                                     )}`}
                                   >
-                                    {task.priority}
+                                    {task?.priority}
                                   </Badge>
                                 </CardContent>
                               </Card>

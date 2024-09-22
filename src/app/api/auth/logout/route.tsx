@@ -1,20 +1,18 @@
 import { NextResponse } from "next/server";
-import Connection from "@/database/config";
 
-Connection();
 
 export const POST = async () => {
   try {
 
-    
+
     const res = NextResponse.next();
 
     res.cookies.set("token", "", {
       maxAge: -1,
-      path: "/", 
+      path: "/",
     });
 
-   
+
 
     return NextResponse.json(
       { message: "User logged out successfully" },

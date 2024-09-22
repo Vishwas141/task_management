@@ -42,7 +42,7 @@ export const POST = async (req) => {
             { id: user._id, username: user.username },
             process.env.JWT_SECRET,
             {
-                expiresIn: 7*60*60*24,
+                expiresIn: 7 * 60 * 60 * 24,
             }
         );
 
@@ -58,7 +58,7 @@ export const POST = async (req) => {
         });
 
         return res;
-        
+
     } catch (error) {
         console.error(error);
         return NextResponse.json(

@@ -157,7 +157,7 @@ export default function TaskCreationForm() {
           </label>
           <Select
             onValueChange={(value) => handleSelectChange("status", value)}
-            defaultValue={formData.status}
+            defaultValue={formData?.status}
           >
             <SelectTrigger id="status" className="mt-1">
               <SelectValue placeholder="Select a status" />
@@ -207,11 +207,11 @@ export default function TaskCreationForm() {
               onClick={() => setCalendarOpen(!calendarOpen)}
               className={cn(
                 "w-full mt-1 justify-start text-left font-normal",
-                !formData.dueDate && "text-muted-foreground"
+                !formData?.dueDate && "text-muted-foreground"
               )}
             >
-              {formData.dueDate ? (
-                format(formData.dueDate, "PPP")
+              {formData?.dueDate ? (
+                format(formData?.dueDate, "PPP")
               ) : (
                 <span>Pick a date</span>
               )}
