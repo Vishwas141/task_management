@@ -105,8 +105,8 @@ const TaskEditForm = () => {
           dueDate: response.data.dueDate
             ? new Date(response.data[0].dueDate)
             : undefined,
-          status: response.data.status,
-          priority: response.data.priority,
+          status: response.data[0].status,
+          priority: response.data[0].priority,
         });
       } catch (error) {
         console.error("Failed to fetch task data", error);
